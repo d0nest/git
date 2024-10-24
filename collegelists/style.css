@@ -1,0 +1,40 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+nav > ul{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    list-style: none;
+    padding: 10px;
+}
+
+*{
+    font-family: roboto, sans-serif;
+    font-weight: 400;
+}
+
+#divider{
+    border: 1px solid grey;
+}
+
+#list-item{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid grey;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;                                                                                  
+}
+#list-item-sub{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#list-item-sub > div{
+    display:flex;
+    flex-direction: row;
+}
