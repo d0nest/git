@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta name="description" content="create an account">
+        
+    </head>
+    <body>
+        <form>
+            <h1>create account</h1>
+            <div class="field-1 container">
+                <label for="username">username</label>
+                <input name="username" type="text" id="username">
+            </div>
+            <div class="field-2 container">
+                <label for="password">password</label>
+                <input name="password" type="password" id="password">
+            </div>
+            <input id="submit" type="button" value="submit">
+        </form>
+        
+        <script>
+            let username = document.getElementById('username');
+            let password = document.getElementById('password');
+            async function signup(){
+                //submit button is clicked.
+                //we shall check if all the formalities are  compleated before checking the customer in?
+                //check if he/she/it has entered all the required fields, username and password in this case.
+                //username can contain any alphabets and numbers and characters, anywhere but it should be unique maybe?
+                //password should be 8 digits long.
+                //if both of them exists in our database we tell him to login instead.
+                
+                // if(!formalities()){
+                //     console.log('not eligible!');
+                //     return;
+                // }
+                //check the database for the user
+                if(true){
+                    //user is new
+                    let user = {
+                        username: username.value,
+                        password: password.value
+                    }
+                    user = JSON.stringify(user);
+                    window.fetch('http://localhost:3000/create/user', {method: 'POST', body: user, headers: {'content-type': 'application/json'}});
+                }
+            }
+            function formalities(){
+                let result = true;
+                if(username.value === ''){
+                    alert('enter username!')
+                    result = false;
+                }
+                if(password.value === ''){
+                    alert('enter password')
+                    result = false;
+                }
+                return result;
+            }
+            document.getElementById('submit').addEventListener('click', signup);
+            
+            </script>
+    </body>
+</html>

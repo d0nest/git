@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Upload</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area.dragging {
+            border-color: #2196F3;
+            background-color: #E3F2FD;
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .upload-text {
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .browse-btn {
+            background-color: #2196F3;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .browse-btn:hover {
+            background-color: #1976D2;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .supported-formats {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 1rem;
+        }
+
+        .error-message {
+            background-color: #FFEBEE;
+            color: #D32F2F;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 2rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .file-size {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .file-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .file-info {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Document Upload</h1>
+
+        <div id="error" class="error-message"></div>
+
+        <div id="dropZone" class="upload-area">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <p class="upload-text">Drag and drop your files here</p>
+            <p class="upload-text">or</p>
+            <label class="browse-btn">
+                Browse Files
+                <input type="file" class="file-input" id="fileInput" multiple>
+            </label>
+            <p class="supported-formats">Supported formats: PDF, Word, Images (JPG, PNG, GIF)</p>
+        </div>
+
+        <div id="fileList" class="file-list"></div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const errorElement = document.getElementById('error');
+        const allowedTypes = [
+            'application/pdf',
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop zone when dragging over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('dragging');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('dragging');
+        }
+
+        // Handle dropped files
+        dropZone.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            const fileArray = Array.from(files);
+            const validFiles = fileArray.filter(file => allowedTypes.includes(file.type));
+
+            if (validFiles.length !== fileArray.length) {
+                showError('Some files were not added due to unsupported file types.');
+            }
+
+            validFiles.forEach(addFileToList);
+        }
+
+        function showError(message) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3000);
+        }
+
+        function getFileIcon(fileType) {
+            if (fileType.includes('image')) return '🖼️';
+            if (fileType.includes('pdf')) return '📄';
+            if (fileType.includes('word')) return '📝';
+            return '📎';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function addFileToList(file) {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+
+            fileItem.innerHTML = `
+                <div class="file-info">
+                    <span class="file-icon">${getFileIcon(file.type)}</span>
+                    <div class="file-details">
+                        <span class="file-name">${file.name}</span>
+                        <span class="file-size">${formatFileSize(file.size)}</span>
+                    </div>
+                </div>
+                <button class="remove-btn" onclick="this.parentElement.remove()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            `;
+
+            fileList.appendChild(fileItem);
+        }
+    </script>
+</body>
+
+</html>

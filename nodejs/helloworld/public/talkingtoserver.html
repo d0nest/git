@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>talking to the server</title>
+        <meta name="author" content="name">
+        <meta name="description" content="an essay colossum that takes data from the server">
+    </head>
+    <body>
+        <button id="talker">click me</button>
+        <a href="https://www.google.com">google.com</a>
+        <script>
+            let p = document.createElement('p');
+            p.style.padding = '10px';
+            p.style.margin = '10px';
+
+            document.getElementById('talker').onclick = async function(event){
+                //request data from the server
+                try{
+                    let response = await window.fetch('http://localhost:3000/click')
+                    if(!response.ok){
+                        console.log("internal server error!");
+                    }
+                    let essay = await response.text();
+                    p.innerHTML = essay;
+                    document.body.appendChild(p)
+                }
+                catch(err){
+                    console.error("fetch is throwing an error: ", err);
+                }
+            }
+            
+        </script>
+        
+    </body>
+    
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .logo img {
+            height: 100%;
+        }
+
+        .profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #2196F3;
+        }
+
+        .profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content Styles */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .document-list {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .document-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .document-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .document-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .document-icon {
+            font-size: 1.5rem;
+        }
+
+        .document-details h3 {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .document-details p {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .download-btn {
+            background: none;
+            border: none;
+            color: #2196F3;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #e3f2fd;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            color: #2196F3;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: #2196F3;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .document-item {
+                padding: 1rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="/api/placeholder/120/40" alt="Company Logo">
+        </div>
+        <div class="profile">
+            <img src="/api/placeholder/40/40" alt="Profile Picture">
+        </div>
+    </header>
+
+    <main>
+        <div class="document-list">
+            <div class="document-item">
+                <div class="document-info">
+                    <span class="document-icon">📄</span>
+                    <div class="document-details">
+                        <h3>Annual Report 2023</h3>
+                        <p>PDF • 2.5 MB • Updated 2 days ago</p>
+                    </div>
+                </div>
+                <button class="download-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                </button>
+            </div>
+            <div class="document-item">
+                <div class="document-info">
+                    <span class="document-icon">📊</span>
+                    <div class="document-details">
+                        <h3>Q4 Financial Analysis</h3>
+                        <p>Excel • 1.8 MB • Updated 5 days ago</p>
+                    </div>
+                </div>
+                <button class="download-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                </button>
+            </div>
+            <div class="document-item">
+                <div class="document-info">
+                    <span class="document-icon">📝</span>
+                    <div class="document-details">
+                        <h3>Project Proposal</h3>
+                        <p>Word • 856 KB • Updated 1 week ago</p>
+                    </div>
+                </div>
+                <button class="download-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <p>📍 123 Business Street</p>
+                <p>📱 (555) 123-4567</p>
+                <p>✉️ support@company.com</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#">About Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Help Center</a>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <p>Follow us on social media for updates and news</p>
+                <div class="social-links">
+                    <a href="#" title="Facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                        </svg>
+                    </a>
+                    <a href="#" title="Twitter">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
+                        </svg>
+                    </a>
+                    <a href="#" title="LinkedIn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                            <rect x="2" y="9" width="4" height="12" />
+                            <circle cx="4" cy="4" r="2" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

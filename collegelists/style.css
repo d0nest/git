@@ -1,6 +1,8 @@
 *{
     margin: 0px;
     padding: 0px;
+    font-family: Tiny5, sans-serif;
+    font-weight: 400;
 }
 
 nav > ul{
@@ -9,11 +11,6 @@ nav > ul{
     justify-content: space-evenly;
     list-style: none;
     padding: 10px;
-}
-
-*{
-    font-family: roboto, sans-serif;
-    font-weight: 400;
 }
 
 #divider{
@@ -26,15 +23,32 @@ nav > ul{
     border: 1px solid grey;
     border-radius: 10px;
     margin: 10px;
-    padding: 10px;                                                                                  
+    padding: 10px;                                                                     
 }
+
 #list-item-sub{
     display:flex;
     flex-direction: column;
     justify-content: space-around;
+    flex-wrap: nowrap;
 }
 
 #list-item-sub > div{
     display:flex;
     flex-direction: row;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 300px){
+   nav > ul{
+    display: flex;
+    list-style: none;
+    padding: 10px;
+    flex-direction: column;
+    align-items: center;
+   }
+   
+   #divider{
+    display: none;
+   }
 }

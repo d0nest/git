@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            button {
+                padding: 5px;
+                margin: 5px;
+            }
+            #upload_your_docs{
+                position: relative;
+                width: 100px;
+                height: 100px;
+                border: 1px solid grey;
+                border-radius: 10px;
+            }
+            #inner_dotted_line{
+                color: grey;
+                text-align: center;
+                right: 9px;
+                bottom: 9px;
+                position: absolute;
+                width: 80px;
+                height: 80px;
+                border: 1px dashed lightgrey;
+                border-radius: 10px;
+            }
+            #arrow{
+                left: 9px;
+                bottom:9px;
+                position: absolute;
+                width: 80px;
+                height: 80px;
+                border: 2px solid black;
+                
+            }
+        </style>
+    </head>
+    <body>
+        <div id="upload_your_docs">
+            <div id="arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                    <path
+                        d="M480-80 200-360l56-57 184 184v-287h80v287l184-183 56 56L480-80Zm-40-520v-120h80v120h-80Zm0-200v-80h80v80h-80Z" />
+                </svg>
+            </div>
+            <div id="inner_dotted_line">upload your docs
+                
+            </div>
+        </div>
+        <input type="file" id="selectFiles" name="file" multiple>
+        
+        <script>
+            selectFiles.onchange = async function (event){
+                console.log('change')
+                const files  = event.target.files;
+                if(files.length === 0){
+                    console.log('no files are selected!')
+                    return;
+                }
+                const formObject = new FormData();
+                for(i = 0; i < files.length; i++){
+                    formObject.append('files', files[i]);
+                }
+                
+                try{
+                    console.log('try');
+                    const response = await window.fetch('files/upload', {
+                        method: 'POST',
+                        body: formObject
+                    });
+                    if(!response.ok){
+                        console.log('internal server error');
+                    }
+                    else{
+                        console.log('files uploaded successfully');
+                    }
+                }
+                catch(err){
+                    throw err;
+                }
+            
+                // for(let i  = 0; i < files.length; i++){
+                //     console.log(`file no ${i}, file name ${files[i].name}`)
+                // }
+            }
+        </script>
+    </body>          
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Phone Number</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+        }
+
+        .verification-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px;
+            margin: 1rem;
+            text-align: center;
+        }
+
+        .verification-header {
+            margin-bottom: 2rem;
+        }
+
+        .verification-header h1 {
+            color: #2d3748;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .verification-header p {
+            color: #718096;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .phone-number {
+            font-weight: 600;
+            color: #00b09b;
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 2rem 0;
+        }
+
+        .otp-inputs input {
+            width: 3.5rem;
+            height: 3.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+        }
+
+        .otp-inputs input:focus {
+            outline: none;
+            border-color: #00b09b;
+            box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.1);
+            background: white;
+        }
+
+        .verify-button {
+            width: 100%;
+            padding: 0.875rem;
+            background: #00b09b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .verify-button:hover {
+            background: #009688;
+        }
+
+        .verify-button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .resend-timer {
+            color: #718096;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .resend-code {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .resend-code a {
+            color: #00b09b;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .resend-code a:hover {
+            text-decoration: underline;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .verification-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .otp-inputs {
+                gap: 0.5rem;
+            }
+
+            .otp-inputs input {
+                width: 3rem;
+                height: 3rem;
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Animation for invalid code */
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-5px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#" class="back-button">
+        ← Back to Sign Up
+    </a>
+
+    <div class="verification-container">
+        <div class="verification-header">
+            <h1>Phone Verification</h1>
+            <p>We've sent a verification code to</p>
+            <p class="phone-number">+1 (555) 123-4567</p>
+            <p>Enter the 6-digit code below</p>
+        </div>
+
+        <form id="verificationForm">
+            <div class="otp-inputs">
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+            </div>
+
+            <button type="submit" class="verify-button" disabled>Verify Code</button>
+        </form>
+
+        <div class="resend-timer">
+            Resend code in <span id="timer">01:59</span>
+        </div>
+
+        <div class="resend-code">
+            Didn't receive the code? <a href="#" id="resendLink">Resend Code</a>
+        </div>
+    </div>
+
+    <script>
+        // Auto-focus and move between inputs
+        const inputs = document.querySelectorAll('.otp-inputs input');
+        const form = document.getElementById('verificationForm');
+        const verifyButton = document.querySelector('.verify-button');
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+
+                // Enable/disable verify button
+                const isComplete = Array.from(inputs).every(input => input.value.length === 1);
+                verifyButton.disabled = !isComplete;
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Timer functionality
+        let timeLeft = 119; // 1:59 in seconds
+        const timerDisplay = document.getElementById('timer');
+        const resendLink = document.getElementById('resendLink');
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft === 0) {
+                resendLink.style.opacity = '1';
+                resendLink.style.cursor = 'pointer';
+            } else {
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            }
+        }
+
+        updateTimer();
+    </script>
+</body>
+
+</html>
